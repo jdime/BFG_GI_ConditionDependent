@@ -172,11 +172,18 @@ Dependencies:
                  Tested with versions 2.8.1 and 3.6.0
                  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
                   to specify the path to cytoscape.sh file in 'cytoscape_executable' key
-                  OR in $CytoscapeSh variable below
+                  OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl 
 
  2) convert      (http://www.imagemagick.org/script/convert.php)
                   to trim white background of network images
 
  3) R and R libraries (gplots and png)
  
-  
+ 4) Perl modules:
+    LoadParameters::Parameters
+    ReformatPerlEntities::ObtainOutfileWOpath
+    PathsDefinition::PathsToInputs
+    PathsDefinition::PathsToPrograms
+    Rcommands::Rcommands
+    
+END;
