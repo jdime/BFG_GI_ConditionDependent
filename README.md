@@ -12,7 +12,8 @@ Description:
  positive (condition 1) to negative (condition 2)
  negative (condition 1) to positive (condition 2)
 
- To draw condition-dependent networks and histograms.
+ To draw condition-dependent networks and histograms, like this one:
+ https://github.com/jdime/BFG_GI_ConditionDependent/blob/master/examples/OUTPUTS/example_outfile.BarplotsAndNetworks.diagonal_up.pdf
  
  ------------------------------------------EXAMPLE---------------------------------------------
 
