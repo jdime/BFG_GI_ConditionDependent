@@ -1,0 +1,13 @@
+### Note script obtain_Complement_BetweenPairsOfColumns_FromTableOfGenePairs_UsingCutoffs.pl
+### should remove any extra headers descriptions and leave only PoolNames
+### Condition	Plot(Y/N)
+NoDrug	N
+DMSO	Y
+MMS	Y
+4NQO	Y
+BLMC	Y
+ZEOC	Y
+HYDX	Y
+DXRB	Y
+CMPT	Y
+CSPL	Y

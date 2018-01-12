@@ -1,0 +1,14 @@
+## These are the expected edges for complement networks
+#
+negative---neutral
+neutral---negative
+#
+positive---negative
+negative---positive
+#
+positive---neutral
+neutral---positive
+#
+## These are the expected edge types for each condition networks (without neutrals)
+positive
+negative
