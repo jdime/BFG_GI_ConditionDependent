@@ -1,5 +1,5 @@
 Script name:
-obtain_Complement_BetweenPairsOfColumns_FromTableOfGenePairs_UsingCutoffs_FromAlbiTablesOfGenePairs_UsingLabels.pl
+plot_condition_dependent_networks_and_barplots_gene_level.pl
 
 Description:
  Will obtain complement sets of condition-dependent genetic interactions from
