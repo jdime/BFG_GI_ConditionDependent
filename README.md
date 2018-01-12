@@ -1,3 +1,6 @@
+-------------------------------------------------------------------------------------------------
+---------------------------------------------START-----------------------------------------------
+  
 Script name:
 plot_condition_dependent_networks_and_barplots_gene_level.pl
 
@@ -10,9 +13,13 @@ Description:
  positive (condition 1) to negative (condition 2)
  negative (condition 1) to positive (condition 2)
 
- To draw condition-dependent networks and histograms
+ To draw condition-dependent networks and histograms.
+ 
+ ------------------------------------------EXAMPLE---------------------------------------------
 
- -------------------------------------------INPUTS----------------------------------------------
+plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
+
+-------------------------------------------INPUTS----------------------------------------------
 
  [1]
  a -infile_table_between in format like:
@@ -42,7 +49,7 @@ Description:
  Notes: this is useful in case -infile_table_* have Abbreviated_ID's and -infile_gml has Full_ID's
         the Abbreviated_ID also can be used with '-represent_nodes abbreviated_id' (see below)
 
- [3]
+ [4]
  a -infile_gml to use as template for node positions for Cytoscape in *gml format like:
  Creator	"Cytoscape"
  Version	1.0
@@ -78,26 +85,32 @@ Description:
  ----------------------------------------MAIN OUTPUTS-------------------------------------------
 
  [1]
- *AllUnderlyingScores.tab with all average, stdevp and underlying pairs, regardless of -infile_restrict_pairs_per_condition option
+ *BarplotsAndNetworks.diagonal_*.pdf
+ Plotted networks and barplots merged into a single file
 
  [2]
- *RestrictedUnderlyingScores.tab with all average, stdevp and underlying pairs for each condition-pair, consideting -infile_restrict_pairs_per_condition
-
+ *BarplotsAndNetworks.legend.pdf
+ Colour legent for outfile [1]
+  
  [3]
- *tab with complements for each pair of columns
+ *Complement.Parameters
+ Parameters used for the run and date/time
 
  [4]
- *BarplotsAndNetworks.pdf showing complements for each pair of columns as a 'matrix'
-
+ *BarplotsAndNetworks.insFor.R
+ Script used for R to generate barplots and merge them with the networks
+  
  [5]
- *sif file with complements at gene-gene level for each pair of columns
-
- [6] (optional)
- *gml file from *sif and a template gml file with node positions
-
+ *full.tab
+ Table of condition-dependent counts (used to make the barplots)
+ 
+ [6]
+ NETWORKS/InstructionsForCytoscape.ins
+ Commands for cytoscape.sh to draw the nerworks
+ 
+  
  ------------------------------------------COMMANDS---------------------------------------------
 
- obtain_Complement_BetweenPairsOfColumns_FromTableOfGenePairs_UsingCutoffs_FromAlbiTablesOfGenePairs_UsingLabels.pl [options]
    -path_outfiles             (path/name to the directory where outfiles will be saved)
    -infile_table_between      (path/name to the table with condition-dependent genetic interactions)
    -infile_table_within       (path/name to the table with genetic interactions for each condition)
@@ -136,7 +149,7 @@ Dependencies:
                   to trim white background of network images
 
  3) R and R libraries (gplots and png)
+ 
+   ----------------------------------------------END------------------------------------------------
+   -------------------------------------------------------------------------------------------------
   
- ------------------------------------------EXAMPLE---------------------------------------------
-
-plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
