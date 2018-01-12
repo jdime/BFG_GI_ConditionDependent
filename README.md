@@ -50,6 +50,36 @@ plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between
         the Abbreviated_ID also can be used with '-represent_nodes abbreviated_id' (see below)
 
  [4]
+ a -infile_order_conditions in format like:
+ #Condition   Plot(Y/N)
+ NoDrug  N
+ DMSO    Y
+ MMS     Y
+ 4NQO    Y
+ BLMC    Y
+ ZEOC    Y
+ HYDX    Y
+ DXRB    Y
+ CMPT    Y
+ CSPL    Y
+ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the order of this file
+        column 2 indicates if the condition should be plotted (Y) or not (N)
+
+ [5]
+ a -infile_edge_types_order in format like:
+ negative---neutral
+ neutral---negative
+ positive---negative
+ negative---positive
+ positive---neutral
+ neutral---positive
+ positive
+ negative
+
+ Notes: will indicate the order in which edges will be drawn in the network (in Cytoscape)
+        Still work in progress
+
+ [6]
  a -infile_gml to use as template for node positions for Cytoscape in *gml format like:
  Creator	"Cytoscape"
  Version	1.0
