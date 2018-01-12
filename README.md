@@ -179,8 +179,9 @@ Dependencies:
 
  3) R and R libraries (gplots and png)
  
- 4) Perl modules:
+ 4) Perl modules (all in 'perl_modules' folder)
     LoadParameters::Parameters
+    LoadParameters::Evaluate_Definitions
     ReformatPerlEntities::ObtainOutfileWOpath
     PathsDefinition::PathsToInputs
     PathsDefinition::PathsToPrograms
