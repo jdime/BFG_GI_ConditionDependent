@@ -2,12 +2,13 @@
 
 ##########################
 ### Elaborated: Javier Diaz - 09Jan2018
+### Modified:  Javier Diaz  - 17Jan2018 - to remove blank spaces in commands that cause Cytoscape v3.4.0 not to run
 ##########################
 
 ##########################
 ### Dependencies:
 ### 1) cytoscape.sh (http://www.cytoscape.org/download.php)
-###                  Tested with versions 2.8.1 and 3.6.0
+###                  Tested with versions 2.8.1, 3.4.0 and 3.6.0
 ###                  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
 ###                  to specify the path to cytoscape.sh file in 'cytoscape_executable' key
 ###                  OR in $CytoscapeSh variable below
@@ -640,7 +641,6 @@ foreach $Condition1 (sort keys %hashAllExpectedConditionNames) {
 					network view fit
 					network view export type=png file=$infileTempRoot.png
 					network destroy name=$infileTempRoot\n";
-					
 					}elsif ($CytoscapeSh =~ /Cytoscape_v3/) {
 					
 					$CommandsForCytoscape .= "
@@ -651,7 +651,7 @@ foreach $Condition1 (sort keys %hashAllExpectedConditionNames) {
 					view destroy\n";
 				
 					}else{
-					die "\n\nERROR!!! couldn't determine the Cytoscape version to use. Only versions 2.X.Y and 3.X.Y are allowed\n";
+					die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
 					}
 				}
 			}
@@ -716,7 +716,7 @@ foreach $Condition (sort keys %hashAllExpectedConditionNames) {
 			$CommandQuitCytoscape = "command quit\n";
 	
 			}else{
-			die "\n\nERROR!!! couldn't determine the Cytoscape version to use. Only versions 2.X.Y and 3.X.Y are allowed\n";
+			die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
 			}
 		}
 	}
@@ -725,6 +725,10 @@ foreach $Condition (sort keys %hashAllExpectedConditionNames) {
 
 unless ($hashParameters{infile_gml} =~ /^NA$/i) {
 $OutFileInsForCytoscape = "$OutDirNetworks/InstructionsForCytoscape.ins";
+
+$CommandsForCytoscape =~ s/\n\s+/\n/g; ### This is needed for Cytoscape v3.4.0 to run commands
+
+
 open  INSTRUCTIONSFORCYTOSCAPE, ">$OutFileInsForCytoscape"  or die "Cant't open '$OutFileInsForCytoscape'\n";
 print INSTRUCTIONSFORCYTOSCAPE "$CommandsForCytoscape\n$CommandQuitCytoscape\n";
 close INSTRUCTIONSFORCYTOSCAPE;
@@ -955,9 +959,17 @@ system "mv ~/$outfileWOpath.BarplotsAndNetworks.diagonal_$hashParameters{diagona
 system "mv ~/$outfileWOpath.BarplotsAndNetworks.legend.pdf $hashParameters{path_outfiles}";
 
 unless ($hashParameters{infile_gml} =~ /^NA$/i) {
+
 	foreach $c (1..$countNetworks) {
 	system "mv /$Users_home/$DefaultUserName/tempnet$c.png $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
 	system "mv /$Users_home/$DefaultUserName/tempnet$c.gml $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
+	
+	### Comment these commands if individual network files want to be kept
+	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
+	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
+	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.sif";
+	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.Parameters";
+	
 	}
 }
 
