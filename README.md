@@ -171,18 +171,26 @@ This code is a wrapper library written in Perl, and needs Cytoscape to draw the 
 
 Dependencies:
 1) cytoscape.sh (http://www.cytoscape.org/download.php)
-                 Tested with versions 2.8.1 and 3.6.0
-                 Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
-                  to specify the path to cytoscape.sh file in 'cytoscape_executable' key
-                  OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl
-                  NOTES: to make sure that the 'cytoscape.sh' executable is working using a Console/Terminal do the following:
+  Tested with versions 2.8.1 and 3.6.0
+  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
+  to specify the path to cytoscape.sh file in 'cytoscape_executable' key
+  OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl
+  
+  Troubleshooting 'cytoscape.sh'
+  
+  If your cytoscape.sh executable doesn't seem to be working, chances are that either you don;t have the correct version of Java or you need to need to tell cytoscape.sh how to find it. In a Console/Terminal do the following:
                   
-                  cd /Applications/Cytoscape_v3.6.0  ## or whichever your cytoscape.sh file is located)
-                 ./cytoscape.sh ### this may tell "Unable to find any JVMs matching version "1.7"."
-                 
-                 If you enter into Cytoscape and the GUI is opened we are all goo (despite the JVM message above)
-                 If your 'cytoscape.sh' can't find the JVM you may add this variable to your  ~/.bash_profile
-                 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home ### or whichever version of JDK you have installed.
+     cd /Applications/Cytoscape_v3.6.0  ## or wherever your cytoscape.sh file is located
+     ./cytoscape.sh ### this may tell you "Unable to find any JVMs matching version "1.7"."
+
+If these commands open the cytoscape.sh GUI, then we are all good (despite the JVM message above)
+But if your 'cytoscape.sh' can't find the JVM, first make sure you have the correct Java version (see you Cytoscape version requiriments). Then type:
+    
+    java -version ### to know the Java you have set up is the correct one
+    
+Add your Java location to your  ~/.bash_profile
+
+    export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home ### or whichever version of JDK you have installed.
                   
  2) convert      (http://www.imagemagick.org/script/convert.php)
                   to trim white background of network images
