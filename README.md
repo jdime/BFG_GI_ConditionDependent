@@ -17,6 +17,7 @@ Description:
  
  ------------------------------------------EXAMPLE---------------------------------------------
 
+
 plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
 
 -------------------------------------------INPUTS----------------------------------------------
@@ -173,10 +174,10 @@ Dependencies:
                  Tested with versions 2.8.1 and 3.6.0
                  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
                   to specify the path to cytoscape.sh file in 'cytoscape_executable' key
-                  OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl 
-                 
-                 NOTES: to make sure that the 'cytoscape.sh' executable is working using a Console/Terminal do the following:
-                 cd /Applications/Cytoscape_v3.6.0  ## or whichever your cytoscape.sh file is located)
+                  OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl
+                  NOTES: to make sure that the 'cytoscape.sh' executable is working using a Console/Terminal do the following:
+                  
+                  cd /Applications/Cytoscape_v3.6.0  ## or whichever your cytoscape.sh file is located)
                  ./cytoscape.sh ### this may tell "Unable to find any JVMs matching version "1.7"."
                  
                  If you enter into Cytoscape and the GUI is opened we are all goo (despite the JVM message above)
