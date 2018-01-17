@@ -174,7 +174,15 @@ Dependencies:
                  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
                   to specify the path to cytoscape.sh file in 'cytoscape_executable' key
                   OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl 
-
+                 
+                 NOTES: to make sure that the 'cytoscape.sh' executable is working using a Console/Terminal do the following:
+                 cd /Applications/Cytoscape_v3.6.0  ## or whichever your cytoscape.sh file is located)
+                 ./cytoscape.sh ### this may tell "Unable to find any JVMs matching version "1.7"."
+                 
+                 If you enter into Cytoscape and the GUI is opened we are all goo (despite the JVM message above)
+                 If your 'cytoscape.sh' can't find the JVM you may add this variable to your  ~/.bash_profile
+                 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home ### or whichever version of JDK you have installed.
+                  
  2) convert      (http://www.imagemagick.org/script/convert.php)
                   to trim white background of network images
 
