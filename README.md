@@ -16,102 +16,102 @@ Description:
  https://github.com/jdime/BFG_GI_ConditionDependent/blob/master/examples/OUTPUTS/example_outfile.BarplotsAndNetworks.diagonal_up.pdf
  
  ------------------------------------------EXAMPLE---------------------------------------------
+This example works with files provided in folder ~/examples/INPUTS
 
-
-plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
+    plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
 
 -------------------------------------------INPUTS----------------------------------------------
 
  [1]
  a -infile_table_between in format like:
- ID1    ID2    Condition1  Condition2  Class_Condition1  Class_Condition2  DeltaZ_FDR
- MMS1   MUS81  NoDrug      MMS         NEUTRAL           AGGRAVATING       0.00111
- RAD59  RAD61  NoDrug      MMS         NEUTRAL           AGGRAVATING       3.50e-06
- RAD52  SGS1   NoDrug      MMS         NEUTRAL           ALLEVIATING       3.97e-88
- CLA4   CSM2   NoDrug      4NQO        NEUTRAL           AGGRAVATING       2.79e-38
+
+    ID1    ID2    Condition1  Condition2  Class_Condition1  Class_Condition2  DeltaZ_FDR
+    MMS1   MUS81  NoDrug      MMS         NEUTRAL           AGGRAVATING       0.00111
+    RAD59  RAD61  NoDrug      MMS         NEUTRAL           AGGRAVATING       3.50e-06
+    RAD52  SGS1   NoDrug      MMS         NEUTRAL           ALLEVIATING       3.97e-88
+    CLA4   CSM2   NoDrug      4NQO        NEUTRAL           AGGRAVATING       2.79e-38
  Note: more columns can exist, but the last four are mandatory
 
  [2]
  a -infile_table_within in format like:
- ID1    ID2    FDR.Internal_ij.NoDrug  FDR.Internal_ij.MMS  FDR.Internal_ij.4NQO  Z_GIS_ij.NoDrug_Class  Z_GIS_ij.MMS_Class  Z_GIS_ij.4NQO_Class   
- MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
- RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
- RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
- CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
+
+    ID1    ID2    FDR.Internal_ij.NoDrug  FDR.Internal_ij.MMS  FDR.Internal_ij.4NQO  Z_GIS_ij.NoDrug_Class  Z_GIS_ij.MMS_Class  Z_GIS_ij.4NQO_Class   
+    MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
+    RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
+    RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
+    CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
  Note: more columns can exist, but Z_GIS_ij.*_Class and FDR.Internal_ij.* are mandatory
 
  [3]
  a -infile_gene_alias in format like:
- Abbreviated  Full_ID
- RTT101       RTT101__YJL047C__S000003583
- SRS2         SRS2__YJL092W__S000003628
- RAD52        RAD52__YML032C__S000004494
- SGS1         SGS1__YMR190C__S000004802
+ 
+    Abbreviated  Full_ID
+    RTT101       RTT101__YJL047C__S000003583
+    SRS2         SRS2__YJL092W__S000003628
+    RAD52        RAD52__YML032C__S000004494
+    SGS1         SGS1__YMR190C__S000004802
  Notes: this is useful in case -infile_table_* have Abbreviated_ID's and -infile_gml has Full_ID's
         the Abbreviated_ID also can be used with '-represent_nodes abbreviated_id' (see below)
 
  [4]
  a -infile_order_conditions in format like:
- #Condition   Plot(Y/N)
- NoDrug  N
- DMSO    Y
- MMS     Y
- 4NQO    Y
- BLMC    Y
- ZEOC    Y
- HYDX    Y
- DXRB    Y
- CMPT    Y
- CSPL    Y
- Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the order of this file
+ 
+    #Condition   Plot(Y/N)
+    NoDrug  N
+    DMSO    Y
+    MMS     Y
+    4NQO    Y
+Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the order of this file
         column 2 indicates if the condition should be plotted (Y) or not (N)
 
  [5]
  a -infile_edge_types_order in format like:
- negative---neutral
- neutral---negative
- positive---negative
- negative---positive
- positive---neutral
- neutral---positive
- positive
- negative
+
+    negative---neutral
+    neutral---negative
+    positive---negative
+    negative---positive
+    positive---neutral
+    neutral---positive
+    positive
+    negative
 
  Notes: will indicate the order in which edges will be drawn in the network (in Cytoscape)
         Still work in progress
 
  [6]
  a -infile_gml to use as template for node positions for Cytoscape in *gml format like:
- Creator	"Cytoscape"
- Version	1.0
- graph	[
- 	node	[
- 		root_index	-57
- 		id	-57
- 		graphics	[
- 			x	124.55083084106445
- 			y	281.7039794921875
- 			w	39.99999237060547
- 			h	40.0
- 		]
- 		label	"RAD18__YCR066W__S000000662"
- 	]
- 	...
- 	edge	[
- 		root_index	-15048
- 		target	-55
- 		source	-49
- 		graphics	[
- 			width	1.5
- 			fill	"#ffcc66"
- 			type	"line"
- 			Line	[
- 			]
- 			source_arrow	0
- 			target_arrow	0
- 		]
- 		label	"PPI"
- 	]
+ 
+    Creator	"Cytoscape"
+    Version	1.0
+    graph	[
+ 	    node	[
+ 		    root_index	-57
+ 		    id	-57
+ 		    graphics	[
+ 			    x	124.55083084106445
+ 			    y	281.7039794921875
+ 			    w	39.99999237060547
+ 			    h	40.0
+ 		    ]
+ 		    label	"RAD18__YCR066W__S000000662"
+ 	    ]
+ 	    ...
+ 	    edge	[
+ 		    root_index	-15048
+ 		    target	-55
+ 		    source	-49
+ 		    graphics	[
+ 			    width	1.5
+ 			    fill	"#ffcc66"
+ 			    type	"line"
+ 			    Line	[
+ 			    ]
+ 			    source_arrow	0
+ 			    target_arrow	0
+ 		    ]
+ 		    label	"PPI"
+ 	    ]
 
  ----------------------------------------MAIN OUTPUTS-------------------------------------------
 
