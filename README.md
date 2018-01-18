@@ -201,20 +201,20 @@ Add your Java Home location to your ~/.bash_profile
 Then open a new Console/Terminal for changes to take effect.
                   
  **2) convert** <br />
- (http://www.imagemagick.org/script/convert.php)
+ (http://www.imagemagick.org/script/convert.php) <br />
  Needed to trim white background of network images
 
  **3) R and R packages (gplots and png)** <br />
- (https://www.r-project.org/)
+ (https://www.r-project.org/) <br />
 `install.packages("gplots","png")`
  
  **4) Perl modules** <br />
- (All provided in the 'perl_modules' folder) . 
-    LoadParameters::Parameters <br />
-    LoadParameters::Evaluate_Definitions <br />
-    ReformatPerlEntities::ObtainOutfileWOpath <br />
-    PathsDefinition::PathsToInputs <br />
-    PathsDefinition::PathsToPrograms <br />
-    Rcommands::Rcommands <br />
+ (All provided in the 'perl_modules' folder) <br />
+ LoadParameters::Parameters <br />
+ LoadParameters::Evaluate_Definitions <br />
+ ReformatPerlEntities::ObtainOutfileWOpath <br />
+ PathsDefinition::PathsToInputs <br />
+ PathsDefinition::PathsToPrograms <br />
+ Rcommands::Rcommands <br />
     
 
