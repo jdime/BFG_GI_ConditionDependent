@@ -1,11 +1,11 @@
 
   
-Script name:
+Script name
 ================
     plot_condition_dependent_networks_and_barplots_gene_level.pl
 
 
-Description:
+Description
 ================
 Obtains complement sets of condition-dependent genetic interactions from:
 a) an -infile_table_between with gene-pairs with condition-dependent genetic interactions for conditions-pairs and
@@ -32,13 +32,13 @@ The general workflow of this script is as follows:
   7. Ends
 
 
-EXAMPLE COMMANDS
+Example commands
 ================
 This example works with files provided in folder ~/examples/INPUTS
 
     plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
 
-INPUTS DESCRIPTION
+Inputs Description
 ================
 
  [1]
@@ -133,7 +133,7 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
  	    ]
 
 
-OUTPUTS DESCRIPTION
+Outputs Description
 ================
 
  [1]
@@ -161,7 +161,7 @@ OUTPUTS DESCRIPTION
  Commands for cytoscape.sh to draw the nerworks
  
 
-COMMANDS DESCRIPTION
+Commands Description
 ================
 
      -path_outfiles             (path/name to the directory where outfiles will be saved)
@@ -187,7 +187,7 @@ COMMANDS DESCRIPTION
      -prefix_for_outfile        (a string to be used for outfiles name)
 
 
-DEPENDENCIES
+Dependencies
 ================
 
 This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
