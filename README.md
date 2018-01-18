@@ -98,7 +98,7 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
  Notes: will indicate the order in which edges will be drawn in the network (in Cytoscape)
         Still work in progress
 
-**6) an -infile_gml to use as template for node positions for Cytoscape in *gml format like:**
+**6) an -infile_gml to use as template for node positions for Cytoscape in gml format like:**
  
     Creator	"Cytoscape"
     Version	1.0
