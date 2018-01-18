@@ -25,6 +25,8 @@ https://github.com/jdime/BFG_GI_ConditionDependent/blob/master/examples/OUTPUTS/
  
 General workflow
 ================
+This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
+
 The general workflow of this script is as follows:
   1. Reads tables with intra-condition genetic interactions (shown as the diagonal of the example output)
   2. Reads tables with sign changes using specified False Discovery Rate cutoffs (shown off-diagonal as both networks and barplots in the example output)
@@ -174,8 +176,6 @@ Commands Description
 
 Dependencies
 ================
-
-This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
 
 **1) cytoscape.sh** <br />
 (http://www.cytoscape.org/download.php)
