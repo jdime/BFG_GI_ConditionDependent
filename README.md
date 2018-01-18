@@ -196,7 +196,7 @@ But if your 'cytoscape.sh' can't find the JVM, first make sure you have the corr
     
 Add your Java Home location to your ~/.bash_profile
 
-    export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home ### or whichever version of JDK you have installed.
+    export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home" ### or whichever version of JDK you have installed.
     
 Then open a new Console/Terminal for changes to take effect.
                   
