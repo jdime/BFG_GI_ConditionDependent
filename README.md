@@ -6,10 +6,11 @@ Script name:
 
 
 Description:
- Will obtain complement sets of condition-dependent genetic interactions from
- an -infile_table_between with gene-pairs with condition-dependent genetic interactions for conditions-pairs and
- an -infile_table_within  with gene-pairs with genetic interactions for each condition
- to form sign changes like:
+================
+Obtains complement sets of condition-dependent genetic interactions from:
+a) an -infile_table_between with gene-pairs with condition-dependent genetic interactions for conditions-pairs and
+b) an -infile_table_within  with gene-pairs with genetic interactions for each condition
+ to plot sign changes like:
  
     neutral  (condition 1) to [positive|negative] (condition 2)
     positive (condition 1) to negative (condition 2)
@@ -18,12 +19,27 @@ Description:
  To draw condition-dependent networks and histograms, like this one:
  https://github.com/jdime/BFG_GI_ConditionDependent/blob/master/examples/OUTPUTS/example_outfile.BarplotsAndNetworks.diagonal_up.pdf
  
- ------------------------------------------EXAMPLE---------------------------------------------
+ 
+General workflow
+================
+The general workflow of this script is as follows:
+  1. Reads tables with intra-condition genetic interactions (shown as the diagonal of the example output)
+  2. Reads tables with sign changes using specified False Discovery Rate cutoffs (shown off-diagonal as both networks and barplots in the example output)
+  3. Gets specific gene-pairs changing interaction signs for off-diagonal networks, and frequencies for barplots
+  4. Draws networks using a template nodes' position file using Cytoscape
+  5. Draws barplots and integrated the networks into the 'matrix' layout using R
+  6. Reports output
+  7. Ends
+
+
+EXAMPLE COMMANDS
+================
 This example works with files provided in folder ~/examples/INPUTS
 
     plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt
 
--------------------------------------------INPUTS----------------------------------------------
+INPUTS DESCRIPTION
+================
 
  [1]
  an -infile_table_between in format like:
@@ -116,7 +132,9 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
  		    label	"PPI"
  	    ]
 
- ----------------------------------------MAIN OUTPUTS-------------------------------------------
+
+OUTPUTS DESCRIPTION
+================
 
  [1]
  *BarplotsAndNetworks.diagonal_*.pdf
@@ -142,8 +160,9 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
  NETWORKS/InstructionsForCytoscape.ins
  Commands for cytoscape.sh to draw the nerworks
  
-  
- ------------------------------------------COMMANDS---------------------------------------------
+
+COMMANDS DESCRIPTION
+================
 
      -path_outfiles             (path/name to the directory where outfiles will be saved)
      -infile_table_between      (path/name to the table with condition-dependent genetic interactions)
@@ -168,7 +187,8 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
      -prefix_for_outfile        (a string to be used for outfiles name)
 
 
- ------------------------------------------DEPENDENCIES---------------------------------------------
+DEPENDENCIES
+================
 
 This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
 
@@ -210,4 +230,4 @@ Then open a new Console/Terminal for changes to take effect.
     PathsDefinition::PathsToPrograms
     Rcommands::Rcommands
     
-END;
+
