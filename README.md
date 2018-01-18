@@ -37,34 +37,32 @@ The general workflow of this script is as follows:
 
 Example commands
 ================
-This example works with files provided in folder ~/examples/INPUTS
+This example works with files provided in folder ~/examples/INPUTS<br />
+
 `plot_condition_dependent_networks_and_barplots_gene_level.pl -cutoff_fdr_between 0.05 -cutoff_fdr_within 0.05 -diagonal_up_or_down up -infile_edge_types_order ~/examples/INPUTS/example_edge_types_order.txt -infile_gene_alias ~/examples/INPUTS/example_gene_alias.txt -infile_gml ~/examples/INPUTS/example_network.gml -infile_order_conditions ~/examples/INPUTS/example_order_conditions.txt -path_outfiles ~/examples/OUTPUTS -prefix_for_outfile example_outfile -represent_nodes none -string_separating_pairs \<tab\> -width_network_edges 10 -infile_table_between ~/examples/INPUTS/example_table_between.txt -infile_table_within ~/examples/INPUTS/example_table_within.txt`
 
 Inputs Description
 ================
 
- [1]
- an -infile_table_between in format like:
+**1) an -infile_table_between in format like:**
 
     ID1    ID2    Condition1  Condition2  Class_Condition1  Class_Condition2  DeltaZ_FDR
     MMS1   MUS81  NoDrug      MMS         NEUTRAL           AGGRAVATING       0.00111
     RAD59  RAD61  NoDrug      MMS         NEUTRAL           AGGRAVATING       3.50e-06
     RAD52  SGS1   NoDrug      MMS         NEUTRAL           ALLEVIATING       3.97e-88
     CLA4   CSM2   NoDrug      4NQO        NEUTRAL           AGGRAVATING       2.79e-38
- Note: more columns can exist, but the last four are mandatory
+ Note: more columns can exist, but the ones shown are mandatory
 
- [2]
- an -infile_table_within in format like:
+**2) an -infile_table_within in format like:**
 
     ID1    ID2    FDR.Internal_ij.NoDrug  FDR.Internal_ij.MMS  FDR.Internal_ij.4NQO  Z_GIS_ij.NoDrug_Class  Z_GIS_ij.MMS_Class  Z_GIS_ij.4NQO_Class   
     MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
     RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
     RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
     CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
- Note: more columns can exist, but Z_GIS_ij.*_Class and FDR.Internal_ij.* are mandatory
+ Note: more columns can exist, but Z_GIS_ij.*_Class and FDR.Internal_ij.* for each condition are mandatory
 
- [3]
- an -infile_gene_alias in format like:
+**3) an -infile_gene_alias in format like:**
  
     Abbreviated  Full_ID
     RTT101       RTT101__YJL047C__S000003583
@@ -74,8 +72,7 @@ Inputs Description
  Notes: this is useful in case -infile_table_* have Abbreviated_ID's and -infile_gml has Full_ID's
         the Abbreviated_ID also can be used with '-represent_nodes abbreviated_id' (see below)
 
- [4]
- an -infile_order_conditions in format like:
+**4) an -infile_order_conditions in format like:**
  
     #Condition   Plot(Y/N)
     NoDrug  N
@@ -85,8 +82,7 @@ Inputs Description
 Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the order of this file
         column 2 indicates if the condition should be plotted (Y) or not (N)
 
- [5]
- an -infile_edge_types_order in format like:
+**5) an -infile_edge_types_order in format like:**
 
     negative---neutral
     neutral---negative
@@ -100,8 +96,7 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
  Notes: will indicate the order in which edges will be drawn in the network (in Cytoscape)
         Still work in progress
 
- [6]
- an -infile_gml to use as template for node positions for Cytoscape in *gml format like:
+**6) an -infile_gml to use as template for node positions for Cytoscape in *gml format like:**
  
     Creator	"Cytoscape"
     Version	1.0
@@ -138,28 +133,16 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
 Outputs Description
 ================
 
- [1]
- *BarplotsAndNetworks.diagonal_*.pdf
+1) *BarplotsAndNetworks.diagonal_*.pdf
  Plotted networks and barplots merged into a single file
 
- [2]
- *BarplotsAndNetworks.legend.pdf
+2) *BarplotsAndNetworks.legend.pdf
  Colour legent for outfile [1]
   
- [3]
- *Complement.Parameters
+3) *Complement.Parameters
  Parameters used for the run and date/time
 
- [4]
- *BarplotsAndNetworks.insFor.R
- Script used for R to generate barplots and merge them with the networks
-  
- [5]
- *full.tab
- Table of condition-dependent counts (used to make the barplots)
- 
- [6]
- NETWORKS/InstructionsForCytoscape.ins
+4) ~/.../NETWORKS/InstructionsForCytoscape.ins
  Commands for cytoscape.sh to draw the nerworks
  
 
