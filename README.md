@@ -227,12 +227,11 @@ Then open a new Console/Terminal for changes to take effect.
  
  **4) Perl modules**
  (All provided in the 'perl_modules' folder) . 
-    LoadParameters::Parameters . 
-    LoadParameters::Evaluate_Definitions
- (All provided in the 'perl_modules' folder) . 
-    ReformatPerlEntities::ObtainOutfileWOpath
-    PathsDefinition::PathsToInputs
-    PathsDefinition::PathsToPrograms
-    Rcommands::Rcommands
+    LoadParameters::Parameters <br />
+    LoadParameters::Evaluate_Definitions <br />
+    ReformatPerlEntities::ObtainOutfileWOpath <br />
+    PathsDefinition::PathsToInputs <br />
+    PathsDefinition::PathsToPrograms <br />
+    Rcommands::Rcommands <br />
     
 
