@@ -133,16 +133,16 @@ Notes: outfile *BarplotsAndNetworks.diagonal_*.pdf will have conditions in the o
 Outputs Description
 ================
 
-1) *BarplotsAndNetworks.diagonal_*.pdf
+1) *BarplotsAndNetworks.diagonal_*.pdf  <br />
  Plotted networks and barplots merged into a single file
 
-2) *BarplotsAndNetworks.legend.pdf
- Colour legent for outfile [1]
+2) *BarplotsAndNetworks.legend.pdf <br />
+ Colour legend for outfile 1
   
-3) *Complement.Parameters
+3) *Complement.Parameters <br />
  Parameters used for the run and date/time
 
-4) ~/.../NETWORKS/InstructionsForCytoscape.ins
+4) ~/.../NETWORKS/InstructionsForCytoscape.ins <br />
  Commands for cytoscape.sh to draw the nerworks
  
 
@@ -177,21 +177,21 @@ Dependencies
 
 This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
 
-**1) cytoscape.sh**
+**1) cytoscape.sh** <br />
 (http://www.cytoscape.org/download.php)
-  Tested with versions 2.8.1 and 3.6.0.
-  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
-  to specify the path to cytoscape.sh file in 'cytoscape_executable' key
+  Tested with versions 2.8.1 and 3.6.0. <br />
+  Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm <br />
+  to specify the path to cytoscape.sh file in 'cytoscape_executable' key <br />
   OR in $CytoscapeSh variable in plot_condition_dependent_networks_and_barplots_gene_level.pl
   
-  Troubleshooting 'cytoscape.sh'
+  Troubleshooting 'cytoscape.sh' <br />
   
-  If your cytoscape.sh executable doesn't seem to be working, chances are that either you don;t have the correct version of Java or you need to need to tell cytoscape.sh how to find it. In a Console/Terminal do the following:
+  If your cytoscape.sh executable doesn't seem to be working, chances are that either you don;t have the correct version of Java or you need to need to tell cytoscape.sh how to find it. In a Console/Terminal do the following: <br />
 `cd /Applications/Cytoscape_v3.6.0  ## or wherever your cytoscape.sh file is located`
 `./cytoscape.sh ### this may tell you "Unable to find any JVMs matching version "1.7"`
 
-If these commands open the cytoscape.sh GUI, then we are all good (despite the JVM message above)
-But if your 'cytoscape.sh' can't find the JVM, first make sure you have the correct Java version (see you Cytoscape version requiriments). Then type:
+If these commands open the cytoscape.sh GUI, then we are all good (despite the JVM message above) <br />
+But if your 'cytoscape.sh' can't find the JVM, first make sure you have the correct Java version (see you Cytoscape version requiriments). Then type: <br />
 `java -version ### to know the Java you have set up is the correct one`
     
 Add your Java Home location to your ~/.bash_profile
@@ -200,15 +200,15 @@ Add your Java Home location to your ~/.bash_profile
     
 Then open a new Console/Terminal for changes to take effect.
                   
- **2) convert**
+ **2) convert** <br />
  (http://www.imagemagick.org/script/convert.php)
  Needed to trim white background of network images
 
- **3) R and R packages (gplots and png)**
+ **3) R and R packages (gplots and png)** <br />
  (https://www.r-project.org/)
 `install.packages("gplots","png")`
  
- **4) Perl modules**
+ **4) Perl modules** <br />
  (All provided in the 'perl_modules' folder) . 
     LoadParameters::Parameters <br />
     LoadParameters::Evaluate_Definitions <br />
