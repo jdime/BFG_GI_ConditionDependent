@@ -196,8 +196,8 @@ Dependencies
 
 This code is a wrapper library written in Perl, and needs Cytoscape to draw the networks and R to draw the barplots and create the matrix formatted final plot.
 
-Dependencies:
-1) cytoscape.sh (http://www.cytoscape.org/download.php)
+**1) cytoscape.sh**
+(http://www.cytoscape.org/download.php)
   Tested with versions 2.8.1 and 3.6.0.
   Modify file ~/perl_modules/PathsDefinition/PathsToPrograms.pm
   to specify the path to cytoscape.sh file in 'cytoscape_executable' key
@@ -221,12 +221,17 @@ Add your Java Home location to your ~/.bash_profile
     
 Then open a new Console/Terminal for changes to take effect.
                   
- 2) convert      (http://www.imagemagick.org/script/convert.php)
-                  to trim white background of network images
+ **2) convert**
+ (http://www.imagemagick.org/script/convert.php)
+ Needed to trim white background of network images
 
- 3) R and R libraries (gplots and png)
+ **3) R and R packages (gplots and png)**
+ (https://www.r-project.org/)
+      
+    install.packages("gplots","png")
  
- 4) Perl modules (all in 'perl_modules' folder)
+ **4) Perl modules**
+ (All provided in the 'perl_modules' folder)
     LoadParameters::Parameters
     LoadParameters::Evaluate_Definitions
     ReformatPerlEntities::ObtainOutfileWOpath
