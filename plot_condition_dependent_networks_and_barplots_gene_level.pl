@@ -1,8 +1,7 @@
 #!/usr/bin/perl
 
 ##########################
-### Elaborated: Javier Diaz - 09Jan2018
-### Modified:  Javier Diaz  - 17Jan2018 - to remove blank spaces in commands that cause Cytoscape v3.4.0 not to run
+### Elaborated: Javier Diaz - javier.diazmejia@gmail.com
 ##########################
 
 ##########################
