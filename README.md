@@ -208,7 +208,7 @@ Then open a new Console/Terminal for changes to take effect.
  (https://www.r-project.org/) <br />
 `install.packages("gplots","png")`
  
- **4) Perl modules** <br />
+ **4) Perl modules** (can be obtained from https://github.com/jdime/BFG_GI_ConditionDependent) <br />
  (All provided in the 'perl_modules' folder) <br />
  LoadParameters::Parameters <br />
  LoadParameters::Evaluate_Definitions <br />
@@ -217,4 +217,6 @@ Then open a new Console/Terminal for changes to take effect.
  PathsDefinition::PathsToPrograms <br />
  Rcommands::Rcommands <br />
     
+ **5) Perl script** (can be obtained from https://github.com/jdime/BFG_GI_ConditionDependent) <br />
 
+ merge_network_SIF_to_GML_template.pl
