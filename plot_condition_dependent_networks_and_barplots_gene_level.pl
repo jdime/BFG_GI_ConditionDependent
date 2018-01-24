@@ -18,10 +18,18 @@
 ###
 ### 3) R and R libraries (gplots and png)
 ###
+### 4) Perl modules (can be obtained from https://github.com/jdime/BFG_GI_ConditionDependent)
+###                  LoadParameters::Parameters;
+###                  PathsDefinition::PathsToInputs;
+###                  PathsDefinition::PathsToPrograms;
+###                  Rcommands::Rcommands;
+###
+### 5) Perl script  (can be obtained from https://github.com/jdime/BFG_GI_ConditionDependent)
+###                  merge_network_SIF_to_GML_template.pl
+###
 ##########################
 
 use LoadParameters::Parameters;
-use ReformatPerlEntities::ObtainOutfileWOpath;
 use PathsDefinition::PathsToInputs;
 use PathsDefinition::PathsToPrograms;
 use Rcommands::Rcommands;
@@ -56,12 +64,12 @@ $CommentsForHelp = "
 ###
 ### [2]
 ### a -infile_table_within in format like:
-### ID1    ID2    FDR.Internal_ij.NoDrug  FDR.Internal_ij.MMS  FDR.Internal_ij.4NQO  Z_GIS_ij.NoDrug_Class  Z_GIS_ij.MMS_Class  Z_GIS_ij.4NQO_Class   
+### ID1    ID2    FDR.Internal_xy.NoDrug  FDR.Internal_xy.MMS  FDR.Internal_xy.4NQO  Z_GIS_xy.NoDrug_Class  Z_GIS_xy.MMS_Class  Z_GIS_xy.4NQO_Class   
 ### MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
 ### RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
 ### RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
 ### CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
-### Note: more columns can exist, but Z_GIS_ij.*_Class and FDR.Internal_ij.* are mandatory
+### Note: more columns can exist, but Z_GIS_xy.*_Class and FDR.Internal_xy.* are mandatory
 ###
 ### [3]
 ### a -infile_gene_alias in format like:
@@ -169,9 +177,9 @@ $CommentsForHelp = "
 ###   -path_outfiles             (path/name to the directory where outfiles will be saved)
 ###   -infile_table_between      (path/name to the table with condition-dependent genetic interactions)
 ###   -infile_table_within       (path/name to the table with genetic interactions for each condition)
-###   -infile_order_conditions   (path/name to a list of column headers from -infile_table_between that will be used for the *BarplotsAndNetworks.pdf outfile. Or type 'NA' to sort alphanumerically)
+###   -infile_order_conditions   (path/name to a list of condition name to be plotted in such order in *BarplotsAndNetworks.pdf outfile)
 ###   -infile_gml                (path/name to the *gml file with node positions to be used as template for gene-gene level complement networks)
-###   -infile_edge_types_order   (path/name to a list of edge types in order to appear in the *gml file. Or type 'NA' to skip)
+###   -infile_edge_types_order   (path/name to a list of edge types in order to appear in the *gml file)
 ###   -infile_gene_alias         (path/name to a paired tab of gene ID's to map from -infile_table_between to -infile_gml)
 ###
 ###   -width_network_edges       (indicates the width for edges in the outfiles for networks, e.g. '1.0' or '2.0', or type 'NA' to skip)
@@ -194,15 +202,6 @@ $CommentsForHelp =~ s/(\n####)|(\n###)|(\n##)|(\n#)/\n/g;
 
 &Readme;
 &Parameters;
-
-$CytoscapeSh = $PathsToPrograms_Files{cytoscape_executable};
-
-if (-f $CytoscapeSh) {
-print "Will use '$CytoscapeSh'\n";
-}else{
-die "\n\nERROR!!! couldn't find '$CytoscapeSh'\n";
-}
-
 
 ###########################
 ### Default parameters ####
@@ -282,15 +281,27 @@ $ColorsHexadecimal =~ s/^,//;
 );
 
 %hashMandatoryColumnHeaderBaseFromInfileWithin = (
-'Z_GIS_ij.*_Class'  => 1,
-'FDR.Internal_ij.*' => 1,
+'Z_GIS_xy.*_Class'  => 1,
+'FDR.Internal_xy.*' => 1,
 );
+
+$CytoscapeSh = $PathsToPrograms_Files{cytoscape_executable};
+if (-f $CytoscapeSh) {
+print "Will use '$CytoscapeSh'\n";
+}else{
+die "\n\nERROR!!! couldn't find '$CytoscapeSh'\n";
+}
+
+$infileGml = $hashParameters{infile_gml};
+$infileGml =~ s/^~/\/$Users_home\/$DefaultUserName/;
+unless (-f $infileGml) {
+die "\n\nERROR!!! couldn't find -infile_gml '$infileGml'\n";
+}
 
 
 ###########################
 ######## Load data ########
 ###########################
-
 
 ## Condition IDs and order for plots
 
@@ -312,6 +323,7 @@ close ORDERPOOLS;
 &GetMatrixFieldsForPlot($NumberOfConditionsToPlot);
 
 ### Index gene aliases
+
 open INFILEGENEALIAS, "<$hashParameters{infile_gene_alias}" or die "Cant't open -infile_gene_alias '$hashParameters{infile_gene_alias}'\n";
 	while ($line = <INFILEGENEALIAS>) {
 	chomp $line;
@@ -319,7 +331,6 @@ open INFILEGENEALIAS, "<$hashParameters{infile_gene_alias}" or die "Cant't open 
 	$hashNodeAliasShortToLong{@arr[0]} = @arr[1];
 	}
 close INFILEGENEALIAS;
-
 
 ### Get commands for node representation
 ### Working only for -represent_nodes node_as_a_dot and -represent_nodes none
@@ -338,8 +349,6 @@ node set properties propertyList=\"Label Transparency\" valueList=255";
 }else{
 die "Working only for -represent_nodes node_as_a_dot and -represent_nodes none\n\n";
 }
-
-
 
 
 ### Index INFILE_BETWEEN
@@ -408,16 +417,16 @@ $van++;
 				
 				$Condition1  = @Data[$columnNumberCondition1];
 				$Condition2  = @Data[$columnNumberCondition2];
-				$Sign1       = @Data[$columnNumberSign1];
-				$Sign2       = @Data[$columnNumberSign2];
+				$sign1       = @Data[$columnNumberSign1];
+				$sign2       = @Data[$columnNumberSign2];
 				$DeltaZ_FDR  = @Data[$columnNumberDeltaZ_FDR];
 		
-				$Sign1 =~ s/AGGRAVATING/negative/;
-				$Sign1 =~ s/ALLEVIATING/positive/;
-				$Sign2 =~ s/AGGRAVATING/negative/;
-				$Sign2 =~ s/ALLEVIATING/positive/;
-				$Sign1 =~ tr/[A-Z]/[a-z]/;
-				$Sign2 =~ tr/[A-Z]/[a-z]/;
+				$sign1 =~ s/AGGRAVATING/negative/i;
+				$sign1 =~ s/ALLEVIATING/positive/i;
+				$sign2 =~ s/AGGRAVATING/negative/i;
+				$sign2 =~ s/ALLEVIATING/positive/i;
+				$sign1 =~ tr/[A-Z]/[a-z]/;
+				$sign2 =~ tr/[A-Z]/[a-z]/;
 				
 				### Here just avoiding pairs to be counted more than once
 				### e.g. if the input has conditions-pairs and/or gene-pairs in reciprocal order
@@ -434,12 +443,12 @@ $van++;
 					### Here filtering by DeltaZ_FDR
 						if ($DeltaZ_FDR < $hashParameters{cutoff_fdr_between}) {
 						### Pairs as provided by -infile_table_between
-						$hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{counts} += 1;
-						$hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{concatenateddata} .= "$key1\t$key2\n";
+						$hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{counts} += 1;
+						$hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{concatenateddata} .= "$key1\t$key2\n";
 					
 						### Pairs in reciprocal order provided by -infile_table_between
-						$hashBetweenPairs{$Sign2}{$Sign1}{$Condition2}{$Condition1}{counts} += 1;
-						$hashBetweenPairs{$Sign2}{$Sign1}{$Condition2}{$Condition1}{concatenateddata} .= "$key1\t$key2\n";
+						$hashBetweenPairs{$sign2}{$sign1}{$Condition2}{$Condition1}{counts} += 1;
+						$hashBetweenPairs{$sign2}{$sign1}{$Condition2}{$Condition1}{concatenateddata} .= "$key1\t$key2\n";
 						
 						}
 					}
@@ -498,24 +507,24 @@ $van++;
 			$key2 = $hashNodeAliasShortToLong{$id2};
 				foreach $Condition (keys %hashAllConditionHeadersInWithin) {
 					if ($hashAllExpectedConditionNames{$Condition}) {
-					$searchFDRheader    = "FDR.Internal_ij.$Condition";
-					$searchZclassheader = "Z_GIS_ij.$Condition" . "_Class";
+					$searchFDRheader    = "FDR.Internal_xy.$Condition";
+					$searchZclassheader = "Z_GIS_xy.$Condition" . "_Class";
 					$columnNumberFDRminusOne    = $hashDataWithinColumnNumberMinusOne{$searchFDRheader};
 					$columnNumberZclassminusOne = $hashDataWithinColumnNumberMinusOne{$searchZclassheader};
 					$columnNumberFDRminusOne    =~ s/^_//;
 					$columnNumberZclassminusOne =~ s/^_//;
 			
 					$FDR  = @Data[$columnNumberFDRminusOne];
-					$Sign = @Data[$columnNumberZclassminusOne];
-					$Sign =~ s/AGGRAVATING/negative/;
-					$Sign =~ s/ALLEVIATING/positive/;
-					$Sign =~ tr/[A-Z]/[a-z]/;
+					$sign = @Data[$columnNumberZclassminusOne];
+					$sign =~ s/AGGRAVATING/negative/i;
+					$sign =~ s/ALLEVIATING/positive/i;
+					$sign =~ tr/[A-Z]/[a-z]/;
 	
 					### Here filtering by FDR
 						if ($FDR < $hashParameters{cutoff_fdr_within}) {
-						### Pairs as provided by -infile_table_between
-						$hashWithinPairs{$Sign}{$Condition}{counts} += 1;
-						$hashWithinPairs{$Sign}{$Condition}{concatenateddata} .= "$key1\t$key2\n";
+						### Pairs as provided by -infile_table_within
+						$hashWithinPairs{$sign}{$Condition}{counts} += 1;
+						$hashWithinPairs{$sign}{$Condition}{concatenateddata} .= "$key1\t$key2\n";
 						}
 					}
 				}
@@ -533,10 +542,10 @@ open TABLECOMPLEMENTSFULL, ">$hashParameters{path_outfiles}/$outfileWOpath.compl
 
 print TABLECOMPLEMENTSFULL "ID1---ID2";
 
-foreach $SignPair (@PairsOfSignsToPlot) {
-$SignPairToPrint = $SignPair;
-$SignPairToPrint =~ s/---/\.vs\./; ## necessary for R
-print TABLECOMPLEMENTSFULL "\t$SignPairToPrint";
+foreach $signPair (@PairsOfSignsToPlot) {
+$signPairToPrint = $signPair;
+$signPairToPrint =~ s/---/\.vs\./; ## necessary for R
+print TABLECOMPLEMENTSFULL "\t$signPairToPrint";
 }
 print TABLECOMPLEMENTSFULL "\n";
 
@@ -546,12 +555,12 @@ foreach $Condition1 (sort keys %hashAllExpectedConditionNames) {
 		if ($hashAllExpectedConditionNames{$Condition1} =~ /^Y$/i && $hashAllExpectedConditionNames{$Condition2} =~ /^Y$/i) {
 		print TABLECOMPLEMENTSFULL "$Condition1.vs.$Condition2";
 	
-			foreach $SignPair (@PairsOfSignsToPlot) {
-			($Sign1,$Sign2) = split ("---", $SignPair);
+			foreach $signPair (@PairsOfSignsToPlot) {
+			($sign1,$sign2) = split ("---", $signPair);
 
 				### Get complements regardless of -infile_restrict_pairs_per_condition
-				if ($hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{counts}) {
-				$valueAll = $hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{counts};
+				if ($hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{counts}) {
+				$valueAll = $hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{counts};
 					if ($valueAll > $maxYValueAll) {
 					$maxYValueAll = $valueAll;
 					}
@@ -599,60 +608,58 @@ foreach $Condition1 (sort keys %hashAllExpectedConditionNames) {
 			open $OutFileSif, ">$OutFileSif"  or die "Cant't open '$OutFileSif'\n";
 		
 				$van = 0;
-				foreach $SignPair (@PairsOfSignsToPlot) {
+				foreach $signPair (@PairsOfSignsToPlot) {
 				$van++;
-				($Sign1,$Sign2) = split ("---", $SignPair);
+				($sign1,$sign2) = split ("---", $signPair);
 		
 				$value = 0;
 				
-					if ($hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{counts}) {
-					$value           = $hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{counts};
-					@UnderlyingPairs = split ("\n", $hashBetweenPairs{$Sign1}{$Sign2}{$Condition1}{$Condition2}{concatenateddata});
+					if ($hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{counts}) {
+					$value           = $hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{counts};
+					@UnderlyingPairs = split ("\n", $hashBetweenPairs{$sign1}{$sign2}{$Condition1}{$Condition2}{concatenateddata});
 					}
 		
 					if ($value > 0) {
 						foreach $underlyingPair (@UnderlyingPairs) {
 						($node1,$node2) = split ("\t", $underlyingPair);
-						print $OutFileSif "$node1\t$SignPair\t$node2\t$hashColourNamesToHex{$hashColourNumberToNameForComplements{$van}}" . "$width_network_edges" . "\n";
+						print $OutFileSif "$node1\t$signPair\t$node2\t$hashColourNamesToHex{$hashColourNumberToNameForComplements{$van}}" . "$width_network_edges" . "\n";
 						}
 					}
 				}
 			close $OutFileSif;
 			
-				unless ($hashParameters{infile_gml} =~ /^NA$/i) {
-				system "merge_network_SIF_to_GML_template.pl $opt_width_network_edges -infile_edge_types_order $hashParameters{infile_edge_types_order} -sif_contains_edge_colours Y -directed n -edges_union_intersec n2 -infile_network_sif $OutFileSif -infile_template_gml $hashParameters{infile_gml} -nodes_union_intersec u -path_outfiles $OutDirNetworks -prefix_outfiles $Condition1.vs.$Condition2";
-				$OutFileGml = "$OutDirNetworks/$Condition1.vs.$Condition2.gml";
-		
-				### Note these commands are for Cytoscape with -S capabilities (command line tool)
-				### Copy infile *gml to the root directory with simple names because Cytoscape's command line tool can't handle spaces, low dashes, etc
-		
-				$countNetworks++;
-				$Conditions    = "$Condition1.vs.$Condition2";
-				$ConditionsInv = "$Condition2.vs.$Condition1";
-				$hashNetworkNumberToNames{$countNetworks} = $Conditions;
-				$hashNetworkNamesToNumber{$Conditions} = $countNetworks;
+			system "merge_network_SIF_to_GML_template.pl $opt_width_network_edges -infile_edge_types_order $hashParameters{infile_edge_types_order} -sif_contains_edge_colours Y -directed n -edges_union_intersec n2 -infile_network_sif $OutFileSif -infile_template_gml $hashParameters{infile_gml} -nodes_union_intersec u -path_outfiles $OutDirNetworks -prefix_outfiles $Condition1.vs.$Condition2";
+			$OutFileGml = "$OutDirNetworks/$Condition1.vs.$Condition2.gml";
+	
+			### Note these commands are for Cytoscape with -S capabilities (command line tool)
+			### Copy infile *gml to the root directory with simple names because Cytoscape's command line tool can't handle spaces, low dashes, etc
+	
+			$countNetworks++;
+			$Conditions    = "$Condition1.vs.$Condition2";
+			$ConditionsInv = "$Condition2.vs.$Condition1";
+			$hashNetworkNumberToNames{$countNetworks} = $Conditions;
+			$hashNetworkNamesToNumber{$Conditions} = $countNetworks;
+			
+			$infileTempRoot = "/$Users_home/$DefaultUserName/tempnet$countNetworks";
+			system "cp $OutFileGml $infileTempRoot.gml";
+			
+				if ($CytoscapeSh =~ /Cytoscape_v2/) {
+				$CommandsForCytoscape .= "
+				network import file=$infileTempRoot.gml
+				network view fit
+				network view export type=png file=$infileTempRoot.png
+				network destroy name=$infileTempRoot\n";
+				}elsif ($CytoscapeSh =~ /Cytoscape_v3/) {
 				
-				$infileTempRoot = "/$Users_home/$DefaultUserName/tempnet$countNetworks";
-				system "cp $OutFileGml $infileTempRoot.gml";
-				
-					if ($CytoscapeSh =~ /Cytoscape_v2/) {
-					$CommandsForCytoscape .= "
-					network import file=$infileTempRoot.gml
-					network view fit
-					network view export type=png file=$infileTempRoot.png
-					network destroy name=$infileTempRoot\n";
-					}elsif ($CytoscapeSh =~ /Cytoscape_v3/) {
-					
-					$CommandsForCytoscape .= "
-					network load file file=\"$infileTempRoot.gml\"
-					view fit content
-					$CommandsToSetNodes
-					view export options=PNG OutputFile=\"$infileTempRoot.png\"
-					view destroy\n";
-				
-					}else{
-					die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
-					}
+				$CommandsForCytoscape .= "
+				network load file file=\"$infileTempRoot.gml\"
+				view fit content
+				$CommandsToSetNodes
+				view export options=PNG OutputFile=\"$infileTempRoot.png\"
+				view destroy\n";
+			
+				}else{
+				die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
 				}
 			}
 		}
@@ -670,60 +677,57 @@ foreach $Condition (sort keys %hashAllExpectedConditionNames) {
 	open $OutFileSif, ">$OutFileSif"  or die "Cant't open '$OutFileSif'\n";
 	
 		$van = 0;
-		foreach $Sign (@SingleSignsToPlot) {
+		foreach $sign (@SingleSignsToPlot) {
 		$van++;
-			if ($hashWithinPairs{$Sign}{$Condition}{concatenateddata}) {
-			@pairMyCodes = split ("\n", $hashWithinPairs{$Sign}{$Condition}{concatenateddata});
+			if ($hashWithinPairs{$sign}{$Condition}{concatenateddata}) {
+			@pairMyCodes = split ("\n", $hashWithinPairs{$sign}{$Condition}{concatenateddata});
 				foreach $pairMyCodes (@pairMyCodes) {
 				($node1,$node2) = split ("\t", $pairMyCodes);
-				print $OutFileSif "$node1\t$Sign\t$node2\t$hashColourNamesToHex{$hashColourNumberToNameForEachcolumn{$van}}" . "$width_network_edges" . "\n";
+				print $OutFileSif "$node1\t$sign\t$node2\t$hashColourNamesToHex{$hashColourNumberToNameForEachcolumn{$van}}" . "$width_network_edges" . "\n";
 				}
 			}
 		}
 	close $OutFileSif;
 	
-		unless ($hashParameters{infile_gml} =~ /^NA$/i) {
-		system "merge_network_SIF_to_GML_template.pl $opt_width_network_edges -infile_edge_types_order $hashParameters{infile_edge_types_order} -sif_contains_edge_colours Y -directed n -edges_union_intersec n2 -infile_network_sif $OutFileSif -infile_template_gml $hashParameters{infile_gml} -nodes_union_intersec u -path_outfiles $OutDirNetworks -prefix_outfiles $Condition";
-		$OutFileGml = "$OutDirNetworks/$Condition.gml";
+	system "merge_network_SIF_to_GML_template.pl $opt_width_network_edges -infile_edge_types_order $hashParameters{infile_edge_types_order} -sif_contains_edge_colours Y -directed n -edges_union_intersec n2 -infile_network_sif $OutFileSif -infile_template_gml $hashParameters{infile_gml} -nodes_union_intersec u -path_outfiles $OutDirNetworks -prefix_outfiles $Condition";
+	$OutFileGml = "$OutDirNetworks/$Condition.gml";
+
+	### Note these commands are for Cytoscape with -S capabilities (command line tool)
+	### Copy infile *gml to the root directory with simple names because Cytoscape's command line tool can't handle spaces, low dashes, etc
+
+	$countNetworks++;
+	$hashNetworkNumberToNames{$countNetworks} = $Condition;
+	$hashNetworkNamesToNumber{$Condition}  = $countNetworks;
 	
-		### Note these commands are for Cytoscape with -S capabilities (command line tool)
-		### Copy infile *gml to the root directory with simple names because Cytoscape's command line tool can't handle spaces, low dashes, etc
-	
-		$countNetworks++;
-		$hashNetworkNumberToNames{$countNetworks} = $Condition;
-		$hashNetworkNamesToNumber{$Condition}  = $countNetworks;
+	$infileTempRoot = "/$Users_home/$DefaultUserName/tempnet$countNetworks";
+	system "cp $OutFileGml $infileTempRoot.gml";
 		
-		$infileTempRoot = "/$Users_home/$DefaultUserName/tempnet$countNetworks";
-		system "cp $OutFileGml $infileTempRoot.gml";
-			
-			if ($CytoscapeSh =~ /Cytoscape_v2/) {
-			$CommandsForCytoscape .= "
-			network import file=$infileTempRoot.gml
-			network view fit
-			network view export type=png file=$infileTempRoot.png
-			network destroy name=$infileTempRoot\n";
-	
-			$CommandQuitCytoscape = "quit\n";
-			
-			}elsif ($CytoscapeSh =~ /Cytoscape_v3/) {
-			$CommandsForCytoscape .= "
-			network load file file=\"$infileTempRoot.gml\"
-			view fit content
-			$CommandsToSetNodes
-			view export options=PNG OutputFile=\"$infileTempRoot.png\"
-			view destroy\n";
-	
-			$CommandQuitCytoscape = "command quit\n";
-	
-			}else{
-			die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
-			}
+		if ($CytoscapeSh =~ /Cytoscape_v2/) {
+		$CommandsForCytoscape .= "
+		network import file=$infileTempRoot.gml
+		network view fit
+		network view export type=png file=$infileTempRoot.png
+		network destroy name=$infileTempRoot\n";
+
+		$CommandQuitCytoscape = "quit\n";
+		
+		}elsif ($CytoscapeSh =~ /Cytoscape_v3/) {
+		$CommandsForCytoscape .= "
+		network load file file=\"$infileTempRoot.gml\"
+		view fit content
+		$CommandsToSetNodes
+		view export options=PNG OutputFile=\"$infileTempRoot.png\"
+		view destroy\n";
+
+		$CommandQuitCytoscape = "command quit\n";
+
+		}else{
+		die "\n\nERROR!!! couldn't determine the cytoscape.sh version to use. Only versions 2.8.0, 3.4.0 and 3.6.0 were tested\n";
 		}
 	}
 }
 
 
-unless ($hashParameters{infile_gml} =~ /^NA$/i) {
 $OutFileInsForCytoscape = "$OutDirNetworks/InstructionsForCytoscape.ins";
 
 $CommandsForCytoscape =~ s/\n\s+/\n/g; ### This is needed for Cytoscape v3.4.0 to run commands
@@ -732,13 +736,12 @@ $CommandsForCytoscape =~ s/\n\s+/\n/g; ### This is needed for Cytoscape v3.4.0 t
 open  INSTRUCTIONSFORCYTOSCAPE, ">$OutFileInsForCytoscape"  or die "Cant't open '$OutFileInsForCytoscape'\n";
 print INSTRUCTIONSFORCYTOSCAPE "$CommandsForCytoscape\n$CommandQuitCytoscape\n";
 close INSTRUCTIONSFORCYTOSCAPE;
-system "$PathsToPrograms_Files{cytoscape_executable} -S $OutDirNetworks/InstructionsForCytoscape.ins";
+system "$CytoscapeSh -S $OutDirNetworks/InstructionsForCytoscape.ins";
 
-	### Trim white background from network images
-	foreach $c (1..$countNetworks) {
-	system "convert /$Users_home/$DefaultUserName/tempnet$c.png -trim /$Users_home/$DefaultUserName/tempnet$c.trimmed.png";
-	system "mv /$Users_home/$DefaultUserName/tempnet$c.trimmed.png /$Users_home/$DefaultUserName/tempnet$c.png";
-	}
+### Trim white background from network images
+foreach $c (1..$countNetworks) {
+system "convert /$Users_home/$DefaultUserName/tempnet$c.png -trim /$Users_home/$DefaultUserName/tempnet$c.trimmed.png";
+system "mv /$Users_home/$DefaultUserName/tempnet$c.trimmed.png /$Users_home/$DefaultUserName/tempnet$c.png";
 }
 
 #####################################
@@ -749,6 +752,7 @@ open BARPLOTSANDNETWORKSINSFORR, ">$hashParameters{path_outfiles}/$outfileWOpath
 
 print BARPLOTSANDNETWORKSINSFORR "
 library(gplots)
+library(png)
 mat<-read.table(\"$hashParameters{path_outfiles}/$outfileWOpath.complements.full.tab\",header=T,row.names=1)
 PlotsFigureWidth<-($NumberOfConditionsToPlot*$FactorSizeForBarPlot)+($FactorSizeForBarPlot*$FactorSizeOveralHeaders)
 PlotsFigureLenght<-($NumberOfConditionsToPlot*$FactorSizeForBarPlot)+($FactorSizeForBarPlot*$FactorSizeOveralHeaders)
@@ -756,10 +760,6 @@ pdf(\"~/$outfileWOpath.BarplotsAndNetworks.diagonal_$hashParameters{diagonal_up_
 par($LayoutForPlot,
 xpd=F)
 \n";
-
-unless ($hashParameters{infile_gml} =~ /^NA$/i) {
-print BARPLOTSANDNETWORKSINSFORR "library(png)\n";
-}
 
 $NumberOfPoolPairsPlotted = 0;
 
@@ -792,17 +792,7 @@ if ($hashParameters{diagonal_up_or_down} =~ /^down$/i) {
 				}
 	
 			}else{
-				if ($hashParameters{infile_gml} =~ /^NA$/i) {
-					if ($NumberOfColumn == 1) {
-					$PlotType = "BARPLOT_FIRST_IN_COLUMN";
-					}elsif ($NumberOfColumn == $NumberOfConditionsToPlot) {
-					$PlotType = "BARPLOT_LAST_IN_COLUMN";
-					}else{
-					$PlotType = "BARPLOT";
-					}
-				}else{
-				$PlotType = "COMPLEMENT_NETWORK";
-				}
+			$PlotType = "COMPLEMENT_NETWORK";
 			$hashPoolPairsOccurring{$Conditions} = 1;
 			}
 	
@@ -864,17 +854,7 @@ if ($hashParameters{diagonal_up_or_down} =~ /^down$/i) {
 				}
 	
 			}else{
-				if ($hashParameters{infile_gml} =~ /^NA$/i) {
-					if ($NumberOfColumn == 1) {
-					$PlotType = "BARPLOT_FIRST_IN_COLUMN";
-					}elsif ($NumberOfColumn == $NumberOfConditionsToPlot) {
-					$PlotType = "BARPLOT_LAST_IN_COLUMN";
-					}else{
-					$PlotType = "BARPLOT";
-					}
-				}else{
-				$PlotType = "COMPLEMENT_NETWORK";
-				}
+			$PlotType = "COMPLEMENT_NETWORK";
 			$hashPoolPairsOccurring{$Conditions} = 1;
 			}
 			
@@ -958,19 +938,15 @@ system "R --no-save < $hashParameters{path_outfiles}/$outfileWOpath.BarplotsAndN
 system "mv ~/$outfileWOpath.BarplotsAndNetworks.diagonal_$hashParameters{diagonal_up_or_down}.pdf $hashParameters{path_outfiles}";
 system "mv ~/$outfileWOpath.BarplotsAndNetworks.legend.pdf $hashParameters{path_outfiles}";
 
-unless ($hashParameters{infile_gml} =~ /^NA$/i) {
-
-	foreach $c (1..$countNetworks) {
-	system "mv /$Users_home/$DefaultUserName/tempnet$c.png $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
-	system "mv /$Users_home/$DefaultUserName/tempnet$c.gml $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
+foreach $c (1..$countNetworks) {
+system "mv /$Users_home/$DefaultUserName/tempnet$c.png $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
+system "mv /$Users_home/$DefaultUserName/tempnet$c.gml $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
 	
-	### Comment these commands if individual network files want to be kept
-	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
-	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
-	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.sif";
-	system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.Parameters";
-	
-	}
+### Comment these commands if individual network files want to be kept
+system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
+system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
+system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.sif";
+system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.Parameters";
 }
 
 &PrintParameters;
