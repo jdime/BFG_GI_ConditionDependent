@@ -281,7 +281,7 @@ $ColorsHexadecimal =~ s/^,//;
 
 %hashMandatoryColumnHeaderBaseFromInfileWithin = (
 'Z_GIS_xy.*_Class'  => 1,
-'FDR.Internal_xy.*' => 1,
+'FDR.neutral_xy.*' => 1,
 );
 
 $CytoscapeSh = $PathsToPrograms_Files{cytoscape_executable};
@@ -390,7 +390,6 @@ $van++;
 		$id2 =      "$3";
 		@Data = split ("\t", $5);
 		
-		
 			#############
 			### Skips same ID pairs
 			unless ($id1 eq $id2) {
@@ -422,8 +421,12 @@ $van++;
 		
 				$sign1 =~ s/AGGRAVATING/negative/i;
 				$sign1 =~ s/ALLEVIATING/positive/i;
+				$sign1 =~ s/EXPECTED/neutral/i;
+
 				$sign2 =~ s/AGGRAVATING/negative/i;
 				$sign2 =~ s/ALLEVIATING/positive/i;
+				$sign2 =~ s/EXPECTED/neutral/i;
+				
 				$sign1 =~ tr/[A-Z]/[a-z]/;
 				$sign2 =~ tr/[A-Z]/[a-z]/;
 				
@@ -438,7 +441,7 @@ $van++;
 		
 				### Here restricting input to only conditions in -infile_order_conditions
 					if ($hashAllExpectedConditionNames{$Condition1} && $hashAllExpectedConditionNames{$Condition2}) {
-					
+
 					### Here filtering by DeltaZ_FDR
 						if ($DeltaZ_FDR < $hashParameters{cutoff_fdr_between}) {
 						### Pairs as provided by -infile_table_between
@@ -517,6 +520,7 @@ $van++;
 					$sign = @Data[$columnNumberZclassminusOne];
 					$sign =~ s/AGGRAVATING/negative/i;
 					$sign =~ s/ALLEVIATING/positive/i;
+					$sign =~ s/EXPECTED/neutral/i;
 					$sign =~ tr/[A-Z]/[a-z]/;
 	
 					### Here filtering by FDR
@@ -726,11 +730,9 @@ foreach $Condition (sort keys %hashAllExpectedConditionNames) {
 	}
 }
 
-
 $OutFileInsForCytoscape = "$OutDirNetworks/InstructionsForCytoscape.ins";
 
 $CommandsForCytoscape =~ s/\n\s+/\n/g; ### This is needed for Cytoscape v3.4.0 to run commands
-
 
 open  INSTRUCTIONSFORCYTOSCAPE, ">$OutFileInsForCytoscape"  or die "Cant't open '$OutFileInsForCytoscape'\n";
 print INSTRUCTIONSFORCYTOSCAPE "$CommandsForCytoscape\n$CommandQuitCytoscape\n";
@@ -942,10 +944,10 @@ system "mv /$Users_home/$DefaultUserName/tempnet$c.png $OutDirNetworks/$hashNetw
 system "mv /$Users_home/$DefaultUserName/tempnet$c.gml $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
 	
 ### Comment these commands if individual network files want to be kept
-system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
-system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
-system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.sif";
-system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.Parameters";
+#system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.png";
+#system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.gml";
+#system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.sif";
+#system "rm $OutDirNetworks/$hashNetworkNumberToNames{$c}.Parameters";
 }
 
 &PrintParameters;
