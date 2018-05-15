@@ -57,12 +57,12 @@ Inputs Description
 
 **2) an -infile_table_within in format like:**
 
-    ID1    ID2    FDR.Internal_ij.NoDrug  FDR.Internal_ij.MMS  FDR.Internal_ij.4NQO  Z_GIS_ij.NoDrug_Class  Z_GIS_ij.MMS_Class  Z_GIS_ij.4NQO_Class   
-    MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
-    RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
-    RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
-    CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
- Note: more columns can exist, but Z_GIS_ij.*_Class and FDR.Internal_ij.* for each condition are mandatory
+    ID1    ID2    FDR.Internal_xy.NoDrug  FDR.Internal_xy.MMS  FDR.Internal_xy.4NQO  Z_GIS_xy.NoDrug_Class  Z_GIS_xy.MMS_Class  Z_GIS_xy.4NQO_Class   
+    MMS1   MUS81  3.238e-27               1.9310e-20           2.92310e-5            NEUTRAL                AGGRAVATING         AGGRAVATING
+    RAD59  RAD61  0.224664                0.6263857            4.6286337             NEUTRAL                AGGRAVATING         AGGRAVATING
+    RAD52  SGS1   8.465e-22               5.0232e-22           5.0232e-12            NEUTRAL                ALLEVIATING         ALLEVIATING
+    CLA4   CSM2   0.799920                0.9493681            1.9368149             NEUTRAL                AGGRAVATING         AGGRAVATING
+Note: more columns can exist, but Z_GIS_xy.*_Class and FDR.Internal_xy.* are mandatory
 
 **3) an -infile_gene_alias in format like:**
  
